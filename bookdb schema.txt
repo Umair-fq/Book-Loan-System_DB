@@ -1,0 +1,47 @@
+create schema 'bookdb';
+
+CREATE TABLE `bookdb`.`normal` (
+  `id` INT NOT NULL,
+  `author` VARCHAR(45) NOT NULL,
+  `year` INT NOT NULL,
+  `language` VARCHAR(45) NOT NULL,
+  `noofhardcopies` INT NOT NULL,
+  `loadperioddays` INT NOT NULL,
+  PRIMARY KEY (`id`));
+
+ALTER TABLE `bookdb`.`normal` 
+CHANGE COLUMN `id` `id` VARCHAR(255) NOT NULL ;
+
+
+CREATE TABLE `bookdb`.`acoustic` (
+  `id` INT NOT NULL,
+  `author` VARCHAR(45) NOT NULL,
+  `language` VARCHAR(45) NOT NULL,
+  `freetraiperioddays` VARCHAR(45) NOT NULL,
+  `subscription` INT NOT NULL,
+  PRIMARY KEY (`id`));
+
+
+ALTER TABLE `bookdb`.`acoustic` 
+CHANGE COLUMN `id` `id` VARCHAR(255) NOT NULL ;
+
+CREATE TABLE `bookdb`.`loanrecord` (
+  `loanid` INT NOT NULL,
+  `bookidifnormal` VARCHAR(255) NULL,
+  `bookidifacoustic` VARCHAR(255) NULL,
+  `booktype` VARCHAR(45) NULL,
+  `user` VARCHAR(45) NULL,
+  PRIMARY KEY (`loanid`),
+  INDEX `bookidifnormal_idx` (`bookidifnormal` ASC) VISIBLE,
+  INDEX `bookidifacoustic_idx` (`bookidifacoustic` ASC) VISIBLE,
+  CONSTRAINT `bookidifnormal`
+    FOREIGN KEY (`bookidifnormal`)
+    REFERENCES `bookdb`.`normal` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `bookidifacoustic`
+    FOREIGN KEY (`bookidifacoustic`)
+    REFERENCES `bookdb`.`acoustic` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
